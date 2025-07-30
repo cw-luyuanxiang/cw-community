@@ -1,0 +1,5 @@
+enabled_banner:
+  default: true
+  type: bool
+  client: true
+  theme_var: true
