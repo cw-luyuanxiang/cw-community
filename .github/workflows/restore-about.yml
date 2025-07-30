@@ -13,12 +13,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Restore about.json for branch
         run: |
-          if [ "${{ github.ref }}" = "refs/heads/master" ]; then
+          echo "Current branch: $GITHUB_REF"
+          if [ "$GITHUB_REF" = "refs/heads/master" ]; then
             cp .about.master.json about.json
-          elif [ "${{ github.ref }}" = "refs/heads/dev" ]; then
+          elif [ "$GITHUB_REF" = "refs/heads/dev" ]; then
             cp .about.dev.json about.json
           else
             echo "No about.json restore needed for this branch"
@@ -30,5 +33,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add about.json
-          git diff --cached --quiet || git commit -m "chore: restore about.json for ${{ github.ref }} branch"
+          git diff --cached --quiet || git commit -m "chore: restore about.json for ${GITHUB_REF#refs/heads/} branch"
           git push
